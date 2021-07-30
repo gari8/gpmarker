@@ -26,7 +26,7 @@ func run(pass *analysis.Pass) (interface{}, error) {
 	for _, file := range pass.Files {
 		cMap := ast.NewCommentMap(fset, file, file.Comments)
 		for _, c := range cMap.Comments() {
-			mark, tp, text := splitSentence(c.Text())
+			mark, tp, text := SplitSentence(c.Text())
 			if mark == "mark" {
 				journal := Journal{
 					Type: tp,
@@ -43,10 +43,10 @@ func run(pass *analysis.Pass) (interface{}, error) {
 	return nil, nil
 }
 
-// mark, type, text
-func splitSentence(s string) (string, string, string) {
-	sentences := arrangeLine(strings.Split(s, " "))
-	mt := arrangeLine(strings.Split(sentences[0], ":"))
+// SplitSentence mark, type, text
+func SplitSentence(s string) (string, string, string) {
+	sentences := ArrangeLine(strings.Split(s, " "))
+	mt := ArrangeLine(strings.Split(sentences[0], ":"))
 	if len(mt) > 1 {
 		if len(mt) > 1 {
 			return mt[0], mt[1], strings.Join(sentences[1:], " ")
@@ -62,7 +62,7 @@ func splitSentence(s string) (string, string, string) {
 	}
 }
 
-func arrangeLine(str []string) []string {
+func ArrangeLine(str []string) []string {
 	var newList []string
 	for _, s := range str {
 		newList = append(newList, strings.Trim(s, "\n"))

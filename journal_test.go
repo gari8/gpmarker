@@ -16,7 +16,7 @@ var testCaseB = &Journal{
 	Text: "abc abc",
 }
 
-func TestAdd(t *testing.T) {
+func TestJournalList_Add(t *testing.T) {
 	var jl JournalList
 	jl.Add(testCaseA)
 	jl.Add(testCaseB)
