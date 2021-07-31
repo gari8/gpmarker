@@ -34,6 +34,10 @@ func (jl *JournalList) Add(j *Journal) {
 }
 
 func (jl *JournalList) Preview() {
+	if len(jl.InfoList) == 0 && len(jl.WarnList) == 0 && len(jl.OtherList) == 0 {
+		PrintAny(PGreen, "No Exist marker")
+		return
+	}
 	fmt.Println("")
 	format := "l.%d [%s.go]: %s\n"
 	formatWithoutText := "l.%d [%s.go]\n"

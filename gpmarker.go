@@ -2,46 +2,15 @@ package gpmarker
 
 import (
 	"go/ast"
+	"go/parser"
 	"go/token"
-	"golang.org/x/tools/go/analysis"
-	"golang.org/x/tools/go/analysis/passes/inspect"
+	"os"
+	"path/filepath"
 	"strings"
 )
 
 const doc = "gpmarker is ..."
-
-// Analyzer is ...
-var Analyzer = &analysis.Analyzer{
-	Name: "gpmarker",
-	Doc:  doc,
-	Run:  run,
-	Requires: []*analysis.Analyzer{
-		inspect.Analyzer,
-	},
-}
-
-func run(pass *analysis.Pass) (interface{}, error) {
-	fset := token.NewFileSet()
-	var journalList JournalList
-	for _, file := range pass.Files {
-		cMap := ast.NewCommentMap(fset, file, file.Comments)
-		for _, c := range cMap.Comments() {
-			mark, tp, text := SplitSentence(c.Text())
-			if mark == "mark" {
-				journal := Journal{
-					Type: tp,
-					FileName: file.Name.String(),
-					Pos: int(c.Pos()),
-					Text: text,
-				}
-				journalList.Add(&journal)
-			}
-		}
-	}
-
-	journalList.Preview()
-	return nil, nil
-}
+var journalList JournalList
 
 // SplitSentence mark, type, text
 func SplitSentence(s string) (string, string, string) {
@@ -68,4 +37,40 @@ func ArrangeLine(str []string) []string {
 		newList = append(newList, strings.Trim(s, "\n"))
 	}
 	return newList
+}
+
+// Walk用の実行関数
+func exec(path string, info os.FileInfo, err error) error {
+	if err != nil {
+		return err
+	}
+	if !info.IsDir() && filepath.Ext(path) == ".go" {
+		fSet := token.NewFileSet()
+		file, err := parser.ParseFile(fSet, path, nil, parser.ParseComments)
+		if err != nil {
+			return err
+		}
+		cMap := ast.NewCommentMap(fSet, file, file.Comments)
+		for _, c := range cMap.Comments() {
+			mark, tp, text := SplitSentence(c.Text())
+			if mark == "mark" {
+				journal := Journal{
+					Type: tp,
+					FileName: file.Name.String(),
+					Pos: int(c.Pos()),
+					Text: text,
+				}
+				journalList.Add(&journal)
+			}
+		}
+	}
+	return nil
+}
+
+func WalkDirectory(fp string) (*JournalList, error) {
+	if err := filepath.Walk(fp, exec); err != nil {
+		PrintAny(PRed, "error : file path not found")
+		return nil, err
+	}
+	return &journalList, nil
 }
