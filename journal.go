@@ -8,6 +8,7 @@ type (
 		FileName string
 		Pos int
 		Text string
+		CodeText []string
 	}
 	JournalList struct {
 		InfoList []*Journal
@@ -33,7 +34,7 @@ func (jl *JournalList) Add(j *Journal) {
 	}
 }
 
-func (jl *JournalList) Preview() {
+func (jl *JournalList) Preview(requireRows bool) {
 	if len(jl.InfoList) == 0 && len(jl.WarnList) == 0 && len(jl.OtherList) == 0 {
 		PrintAny(PGreen, "No Exist marker")
 		return
@@ -45,8 +46,10 @@ func (jl *JournalList) Preview() {
 		if i == 0 { PrintAny(PMagenta, "=== Warnings") }
 		if w.Text == "" {
 			fmt.Printf(formatWithoutText, w.FileName, w.Pos)
+			if requireRows { printRows(w.CodeText, PYellow, PGreen) }
 		} else {
 			fmt.Printf(format, w.FileName, w.Pos, w.Text)
+			if requireRows { printRows(w.CodeText, PYellow, PGreen) }
 		}
 		if i == len(jl.WarnList) - 1 { fmt.Println("") }
 	}
@@ -55,8 +58,10 @@ func (jl *JournalList) Preview() {
 		if i == 0 { PrintAny(PCyan, "=== Information") }
 		if w.Text == "" {
 			fmt.Printf(formatWithoutText, w.FileName, w.Pos)
+			if requireRows { printRows(w.CodeText, PYellow, PGreen) }
 		} else {
 			fmt.Printf(format, w.FileName, w.Pos, w.Text)
+			if requireRows { printRows(w.CodeText, PYellow, PGreen) }
 		}
 		if i == len(jl.InfoList) - 1 { fmt.Println("") }
 	}
@@ -65,9 +70,26 @@ func (jl *JournalList) Preview() {
 		if i == 0 { PrintAny(PBlue, "=== Others") }
 		if w.Text == "" {
 			fmt.Printf(formatWithoutText, w.FileName, w.Pos)
+			if requireRows { printRows(w.CodeText, PYellow, PGreen) }
 		} else {
 			fmt.Printf(format, w.FileName, w.Pos, w.Text)
+			if requireRows { printRows(w.CodeText, PYellow, PGreen) }
 		}
 		if i == len(jl.OtherList) - 1 { fmt.Println("") }
+	}
+}
+
+// private
+
+func printRows(rows []string, colors ...int) {
+	preColor := PYellow
+	for i, row := range rows {
+		var colorNum int
+		if len(colors) > i {
+			colorNum, preColor = colors[i], colors[i]
+		} else {
+			colorNum = preColor
+		}
+		PrintAny(colorNum, row)
 	}
 }
