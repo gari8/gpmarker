@@ -12,6 +12,8 @@ $ go get -u github.com/gari8/gpmarker/cmd/gpmarker
 
 ```bash
 $ tree
+
+#responses
 .
 └── a.go
 ```
@@ -31,12 +33,12 @@ func f() {
 }
 ```
 
-`execution command`
-`search and show line which putting mark`
+`executing command`
 
 ```bash
 $ gpmarker
 
+# responses
 === Warnings
 [a.go:9] => this print is not require
 
@@ -55,11 +57,12 @@ How to use CLI?:
         -r: show source code near comment
 ```
 
-`execution command with -r option`
+`executing command with -r option`
 
 ```bash
 $ gpmarker -r
 
+# responses
 === Warnings
 [a.go:9] => this print is not require
 9:      println("debug") // mark:warn this print is not require
@@ -93,9 +96,18 @@ How to use CLI?:
         -r: show source code near comment
 ```
 
+`Specifying the path and executing`
+
+```bash
+$ gpmarker -p . # specifying dir or file path
+
+# show responses
+...
+```
+
 
 ## comment pattern
-message is not require
+message is not required
 - `// mark [*message]` As Others 
 - `// mark:info [*message]` As Information 
 - `// mark:warn [*message]` As Warnings
