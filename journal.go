@@ -39,14 +39,14 @@ func (jl *JournalList) Preview() {
 		return
 	}
 	fmt.Println("")
-	format := "l.%d [%s.go]: %s\n"
-	formatWithoutText := "l.%d [%s.go]\n"
+	format := "[%s.go:%d] => %s\n"
+	formatWithoutText := "[%s.go:%d]\n"
 	for i, w := range jl.WarnList {
 		if i == 0 { PrintAny(PMagenta, "=== Warnings") }
 		if w.Text == "" {
-			fmt.Printf(formatWithoutText, w.Pos, w.FileName)
+			fmt.Printf(formatWithoutText, w.FileName, w.Pos)
 		} else {
-			fmt.Printf(format, w.Pos, w.FileName, w.Text)
+			fmt.Printf(format, w.FileName, w.Pos, w.Text)
 		}
 		if i == len(jl.WarnList) - 1 { fmt.Println("") }
 	}
@@ -54,9 +54,9 @@ func (jl *JournalList) Preview() {
 	for i, w := range jl.InfoList {
 		if i == 0 { PrintAny(PCyan, "=== Information") }
 		if w.Text == "" {
-			fmt.Printf(formatWithoutText, w.Pos, w.FileName)
+			fmt.Printf(formatWithoutText, w.FileName, w.Pos)
 		} else {
-			fmt.Printf(format, w.Pos, w.FileName, w.Text)
+			fmt.Printf(format, w.FileName, w.Pos, w.Text)
 		}
 		if i == len(jl.InfoList) - 1 { fmt.Println("") }
 	}
@@ -64,9 +64,9 @@ func (jl *JournalList) Preview() {
 	for i, w := range jl.OtherList {
 		if i == 0 { PrintAny(PBlue, "=== Others") }
 		if w.Text == "" {
-			fmt.Printf(formatWithoutText, w.Pos, w.FileName)
+			fmt.Printf(formatWithoutText, w.FileName, w.Pos)
 		} else {
-			fmt.Printf(format, w.Pos, w.FileName, w.Text)
+			fmt.Printf(format, w.FileName, w.Pos, w.Text)
 		}
 		if i == len(jl.OtherList) - 1 { fmt.Println("") }
 	}

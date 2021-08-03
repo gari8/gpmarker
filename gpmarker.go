@@ -24,7 +24,7 @@ func SplitSentence(s string) (string, string, string) {
 		}
 	} else {
 		if len(sentences) > 1 {
-			return mt[0], "", sentences[1]
+			return mt[0], "", strings.Join(sentences[1:], " ")
 		} else {
 			return mt[0], "", ""
 		}
@@ -52,12 +52,13 @@ func exec(path string, info os.FileInfo, err error) error {
 		}
 		cMap := ast.NewCommentMap(fSet, file, file.Comments)
 		for _, c := range cMap.Comments() {
+			ff := fSet.File(c.Pos())
 			mark, tp, text := SplitSentence(c.Text())
 			if mark == "mark" {
 				journal := Journal{
 					Type: tp,
 					FileName: file.Name.String(),
-					Pos: int(c.Pos()),
+					Pos: ff.Line(c.Pos()),
 					Text: text,
 				}
 				journalList.Add(&journal)
