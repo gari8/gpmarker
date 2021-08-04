@@ -76,7 +76,7 @@ func exec(path string, info os.FileInfo, err error) error {
 		if mark == "mark" {
 			journal := Journal{
 				Type: tp,
-				FileName: pf.Name.String(),
+				FileName: path,
 				Pos: line,
 				Text: text,
 				CodeText: rows[line-1:endLine+2],

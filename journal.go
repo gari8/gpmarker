@@ -40,8 +40,8 @@ func (jl *JournalList) Preview(requireRows bool) {
 		return
 	}
 	fmt.Println("")
-	format := "[%s.go:%d] => %s\n"
-	formatWithoutText := "[%s.go:%d]\n"
+	format := "[%s:%d] => %s\n"
+	formatWithoutText := "[%s:%d]\n"
 	for i, w := range jl.WarnList {
 		if i == 0 { PrintAny(PMagenta, "=== Warnings") }
 		if w.Text == "" {
