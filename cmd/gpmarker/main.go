@@ -14,7 +14,7 @@ type Content struct {
 
 func main() {
 	var content Content
-	flag.BoolVar(&content.RequireRows, "r", false, "require code rows default false")
+	flag.BoolVar(&content.RequireRows, "c", false, "require code rows default false")
 	flag.BoolVar(&content.HelpMode, "h", false, "help-mode default false")
 	flag.StringVar(&content.FilePath, "p", ".", "cli-mode file path")
 	flag.Parse()
@@ -38,7 +38,7 @@ const helpText = `	gpmarker CLI
 		you can instruct file path
 	-h:
 		show help message
-	-r:
+	-c:
 		show source code near comment
 `
 
@@ -46,4 +46,4 @@ const guideText = `How to use CLI?:
 	gpmarker CLI MODE
 	-h: show help message
 	-p: you can instruct file path
-	-r: show source code near comment`
+	-c: show source code near comment`
